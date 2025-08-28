@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 
 class JobVacancy extends Model
 {
@@ -25,6 +24,7 @@ class JobVacancy extends Model
         'Customer Service',
         'Administration',
     ];
+
     public static array $levels = [
         'entry',
         'mid',
@@ -36,17 +36,18 @@ class JobVacancy extends Model
         'closed',
         'pending',
     ];
+
     #[Scope]
-    protected function search(Builder|QueryBuilder $query): Builder|QueryBuilder
+    protected function search(Builder $query): Builder
     {
         $filters = request()->only(['search', 'category', 'level', 'min_salary', 'max_salary']);
 
         return $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
-                $query->where('title', 'like', '%' . $search . '%')
-                    ->orWhere('description', 'like', '%' . $search . '%')
-                    ->orWhere('location', 'like', '%' . $search . '%')
-                    ->orWhere('company', 'like', '%' . $search . '%');
+                $query->where('title', 'like', '%'.$search.'%')
+                    ->orWhere('description', 'like', '%'.$search.'%')
+                    ->orWhere('location', 'like', '%'.$search.'%')
+                    ->orWhere('company', 'like', '%'.$search.'%');
             });
         })
             ->when($filters['min_salary'] ?? null, function ($query) use ($filters) {

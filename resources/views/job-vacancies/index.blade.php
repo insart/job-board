@@ -2,7 +2,7 @@
 <x-layout>
     <x-breadcrumbs class="mb-4" :breadcrumbs="['Vacancies' => route('job-vacancies.index')]"/>
     <x-card class="mb-4 text-sm" x-data="">
-        <form x-ref="search-form" id="search-form" action="{{ route('job-vacancies.index') }}" method="get">
+        <form x-ref="search_form" id="search-form" action="{{ route('job-vacancies.index') }}" method="get">
             <div class="mb-4 grid grid-cols-2 gap-4">
                 <div>
                     <div class="mb-1 font-semibold">Search</div>
