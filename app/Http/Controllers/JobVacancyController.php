@@ -12,7 +12,9 @@ class JobVacancyController extends Controller
      */
     public function index()
     {
-        return view('job-vacancies.index', ['jobVacancies' => JobVacancy::search()->get()]);
+        return view('job-vacancies.index', [
+            'jobVacancies' => JobVacancy::with('employer')->search()->get(),
+        ]);
     }
 
     /**

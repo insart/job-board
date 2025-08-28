@@ -19,10 +19,9 @@ class JobVacancyFactory extends Factory
     {
         return [
             'title' => fake()->jobTitle(),
-            'description' => fake()->paragraph(),
+            'description' => fake()->paragraphs(5, true),
             'salary' => fake()->numberBetween(10000, 100000),
             'location' => fake()->city(),
-            'company' => fake()->company(),
             'status' => fake()->randomElement(JobVacancy::$statuses),
             'level' => fake()->randomElement(JobVacancy::$levels),
             'category' => fake()->randomElement(JobVacancy::$categories),

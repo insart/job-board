@@ -4,6 +4,7 @@ use App\Models\JobVacancy;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use App\Models\Employer;
 
 return new class extends Migration
 {
@@ -19,10 +20,11 @@ return new class extends Migration
             $table->unsignedInteger('salary');
             $table->string('location')->index();
             $table->string('category')->index();
-            $table->string('company');
             $table->enum('level', JobVacancy::$levels);
             $table->enum('status', JobVacancy::$statuses)->index();
             $table->timestamps();
+
+            $table->foreignIdFor(Employer::class)->constrained()->onDelete('cascade');
         });
     }
 

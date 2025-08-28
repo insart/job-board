@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class JobVacancy extends Model
 {
@@ -37,6 +38,16 @@ class JobVacancy extends Model
         'pending',
     ];
 
+    public function employer(): BelongsTo
+    {
+        return $this->belongsTo(Employer::class);
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     #[Scope]
     protected function search(Builder $query): Builder
     {
@@ -47,7 +58,9 @@ class JobVacancy extends Model
                 $query->where('title', 'like', '%'.$search.'%')
                     ->orWhere('description', 'like', '%'.$search.'%')
                     ->orWhere('location', 'like', '%'.$search.'%')
-                    ->orWhere('company', 'like', '%'.$search.'%');
+                    ->orWhereHas('employer', function ($query) use ($search) {
+                        $query->where('name', 'like', '%'.$search.'%');
+                    });
             });
         })
             ->when($filters['min_salary'] ?? null, function ($query) use ($filters) {
