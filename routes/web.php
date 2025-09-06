@@ -5,6 +5,8 @@ use App\Http\Controllers\EmployerController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobVacancyController;
 use App\Http\Controllers\MyJobApplicationController;
+use App\Http\Controllers\MyJobController;
+use App\Http\Middleware\Employer;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn () => to_route('job-vacancies.index'))
@@ -35,4 +37,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('employers', EmployerController::class)
         ->only(['create', 'store'])
         ->names('employers');
+
+    Route::middleware('employer')
+        ->resource('my-jobs', MyJobController::class)
+        ->names('my-jobs');
 });

@@ -30,6 +30,7 @@ use Illuminate\Support\Carbon;
  * @property-read Collection<int, JobApplication> $jobApplications
  * @property-read int|null $job_applications_count
  * @property-read User|null $user
+ *
  * @method static JobVacancyFactory factory($count = null, $state = [])
  * @method static Builder<static>|JobVacancy newModelQuery()
  * @method static Builder<static>|JobVacancy newQuery()
@@ -46,6 +47,7 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|JobVacancy whereStatus($value)
  * @method static Builder<static>|JobVacancy whereTitle($value)
  * @method static Builder<static>|JobVacancy whereUpdatedAt($value)
+ *
  * @mixin Eloquent
  */
 class JobVacancy extends Model
@@ -77,11 +79,18 @@ class JobVacancy extends Model
     ];
 
     protected $fillable = [
+        'title',
+        'description',
+        'salary',
+        'location',
+        'category',
+        'level',
+        'status',
         'employer_id',
-        'user_id',
-        'expected_salary',
-        'cover_letter',
-        'resume',
+    ];
+
+    protected $attributes = [
+        'status' => 'open',
     ];
 
     public function employer(): BelongsTo
