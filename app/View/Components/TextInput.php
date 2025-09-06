@@ -25,8 +25,8 @@ class TextInput extends Component
         public ?string $autocomplete = null,
         public ?string $maxlength = null,
         public ?string $formRef = null,
-    )
-    {
+        public ?string $rows = null,
+    ) {
         //
     }
 

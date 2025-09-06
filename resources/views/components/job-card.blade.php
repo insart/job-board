@@ -24,6 +24,9 @@
             <x-tag>{{ Str::ucfirst($jobVacancy->status) }}</x-tag>
         </div>
     </div>
+    <div class="text-xs text-gray-500">
+        {{ $jobVacancy->created_at->diffForHumans() }}
+    </div>
 
     {{ $slot }}
 </x-card>

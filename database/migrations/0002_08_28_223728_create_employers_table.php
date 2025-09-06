@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('employers', function (Blueprint $table) {
             $table->id();
+            $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('cascade');
             $table->string('name');
             $table->string('email')->unique();
             $table->string('address');
@@ -23,7 +24,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->timestamps();
 
-            $table->foreignIdFor(User::class)->nullable()->constrained()->onDelete('cascade');
         });
     }
 

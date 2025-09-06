@@ -2,18 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JobVacancy;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 
-class JobVacancyController extends Controller
+class MyJobApplicationController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('job-vacancies.index', [
-            'jobVacancies' => JobVacancy::with('employer')->search()->get(),
+        return view('my-job-applications.index', [
+            'jobApplications' => auth()->user()->jobApplications()
+                ->with([
+                    'jobVacancy' => fn ($query) => $query->withCount('jobApplications')
+                        ->withAvg('jobApplications', 'expected_salary'),
+                    'jobVacancy.employer',
+                ])
+                ->latest()->get(),
         ]);
     }
 
@@ -36,13 +42,9 @@ class JobVacancyController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(JobVacancy $jobVacancy)
+    public function show(string $id)
     {
-        return view(
-            'job-vacancies.show', [
-                'jobVacancy' => $jobVacancy->load('employer.jobVacancies'),
-            ]
-        );
+        //
     }
 
     /**
@@ -64,8 +66,10 @@ class JobVacancyController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(JobApplication $myApplication) // the variable name needs to be the same as the route segment name (Implicit Binding)
     {
-        //
+        $myApplication->delete();
+
+        return redirect()->back()->with('success', 'Application deleted successfully.');
     }
 }

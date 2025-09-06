@@ -1,18 +1,47 @@
 <div class="relative">
-    @if($formRef)
-        <button type="button"
-                class="absolute top-0 right-0 flex items-center justify-center h-full px-2 text-gray-400"
-                @click="$refs['{{ $name }}'].value = ''; $refs['{{ $formRef }}'].submit();"
-        >
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor"
-                 class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M12 9.75 14.25 12m0 0 2.25 2.25M14.25 12l2.25-2.25M14.25 12 12 14.25m-2.58 4.92-6.374-6.375a1.125 1.125 0 0 1 0-1.59L9.42 4.83c.21-.211.497-.33.795-.33H19.5a2.25 2.25 0 0 1 2.25 2.25v10.5a2.25 2.25 0 0 1-2.25 2.25h-9.284c-.298 0-.585-.119-.795-.33Z"/>
-            </svg>
-        </button>
+    @if ('textarea' != $type)
+        @if ($formRef)
+            <button type="button"
+                    {{ $attributes->class(['absolute top-0 right-0 flex h-full items-center pr-2']) }}
+                    @click="$refs['input-{{ $name }}'].value = ''; $refs['{{ $formRef }}'].submit();">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="h-4 w-4 text-slate-500">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        @endif
+        <input x-ref="input-{{ $name }}"
+               type="{{ $type }}"
+               placeholder="{{ $placeholder }}"
+               name="{{ $name }}"
+               value="{{ old($name, $value) }}"
+               id="{{ $name }}"
+                {{ $attributes->class([
+                    'w-full rounded-md border-0 py-1.5 px-2.5 text-sm ring-1 placeholder:text-gray-400 focus:ring-2
+                    file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold
+                    file:bg-gray-200 file:text-gray-700 hover:file:bg-blue-100',
+                    'pr-8' => $formRef,
+                    'ring-slate-300' => !$errors->has($name),
+                    'ring-red-300' => $errors->has($name),
+                ]) }}
+        />
+    @else
+        <textarea rows="{{ $rows }}"
+                  id="{{ $name }}"
+                  name="{{ $name }}"
+                  placeholder="{{ $placeholder }}"
+            {{ $attributes->class([
+                'w-full rounded-md border-0 py-3.5 px-5.5 text-sm ring-1 placeholder:text-gray-400 focus:ring-2',
+                'pr-8' => $formRef,
+                'ring-slate-300' => !$errors->has($name),
+                'ring-red-300' => $errors->has($name),
+            ]) }}
+        >{{ old($name, $value) }}</textarea>
     @endif
-    <input x-ref="{{ $name }}" type="text" name="{{ $name }}" value="{{ $value }}" placeholder="{{ $placeholder }}" id="{{ $name }}"
-           class="w-full border-gray-300 focus:border-indigo-300 focus:ring-indigo-200 focus:ring-opacity-50
-rounded-md shadow-sm placeholder:text-gray-400 focus:ring-2 px-3 py-2 pr-9" />
+
+    @error($name)
+    <div class="mt-1 text-xs text-red-500">
+        {{ $message }}
+    </div>
+    @enderror
 </div>

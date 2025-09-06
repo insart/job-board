@@ -5,12 +5,12 @@
         <form x-ref="search_form" id="search-form" action="{{ route('job-vacancies.index') }}" method="get">
             <div class="mb-4 grid grid-cols-2 gap-4">
                 <div>
-                    <div class="mb-1 font-semibold">Search</div>
+                    <x-label for="search" label="Search"/>
                     <x-text-input name="search" placeholder="Job Title, Location..." class="col-span-2"
                                   value="{{ request('search') }}" form-ref="search-form"/>
                 </div>
                 <div>
-                    <div class="mb-1 font-semibold">Salary</div>
+                    <x-label for="min_salary" label="Salary Range"/>
                     <div class="flex gap-4">
                         <x-text-input name="min_salary" placeholder="From" class="col-span-2"
                                       value="{{ request('min_salary') }}" form-ref="search-form"/>
@@ -19,12 +19,12 @@
                     </div>
                 </div>
                 <div>
-                    <div class="mb-1 font-semibold">Level</div>
+                    <x-label for="level" label="Level"/>
                     <x-radio-group name="level" class="col-span-2" :options="JobVacancy::$levels"
                                    :selected="request('level')"/>
                 </div>
                 <div>
-                    <div class="mb-1 font-semibold">Category</div>
+                    <x-label for="category" label="Category"/>
                     <x-radio-group name="category" class="col-span-2" :options="JobVacancy::$categories"
                                    :selected="request('category')"/>
                 </div>

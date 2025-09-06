@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JobVacancy;
+use App\Models\Employer;
+use Auth;
+use Gate;
 use Illuminate\Http\Request;
 
-class JobVacancyController extends Controller
+class EmployerController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('job-vacancies.index', [
-            'jobVacancies' => JobVacancy::with('employer')->search()->get(),
-        ]);
+        //
     }
 
     /**
@@ -22,7 +22,9 @@ class JobVacancyController extends Controller
      */
     public function create()
     {
-        //
+        Gate::authorize('create', Employer::class);
+
+        return view('employers.create');
     }
 
     /**
@@ -30,19 +32,26 @@ class JobVacancyController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Auth::user()->employer()->create([
+            ...$request->validate([
+                'name' => 'required|string|max:255|min:3',
+                'email' => 'required|email|unique:employers',
+                'address' => 'required|string|max:255',
+                'phone' => 'required|unique:employers',
+                'website' => 'string|nullable',
+                'description' => 'string|nullable',
+            ]),
+        ]);
+
+        return redirect()->route('job-vacancies.index')->with('success', 'Employer created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(JobVacancy $jobVacancy)
+    public function show(string $id)
     {
-        return view(
-            'job-vacancies.show', [
-                'jobVacancy' => $jobVacancy->load('employer.jobVacancies'),
-            ]
-        );
+        //
     }
 
     /**
