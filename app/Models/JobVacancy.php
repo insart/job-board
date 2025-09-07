@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\HigherOrderWhenProxy;
+use LaravelIdea\Helper\App\Models\_IH_JobVacancy_QB;
 
 /**
  * @property int $id
@@ -109,11 +111,11 @@ class JobVacancy extends Model
     }
 
     #[Scope]
-    protected function search(Builder $query): Builder
+    protected function scopeSearch(Builder $query): void
     {
         $filters = request()->only(['search', 'category', 'level', 'min_salary', 'max_salary']);
 
-        return $query->when($filters['search'] ?? null, function ($query, $search) {
+        $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where(function ($query) use ($search) {
                 $query->where('title', 'like', '%'.$search.'%')
                     ->orWhere('description', 'like', '%'.$search.'%')
@@ -134,7 +136,8 @@ class JobVacancy extends Model
             })
             ->when($filters['category'] ?? null, function ($query) use ($filters) {
                 $query->where('category', '=', $filters['category']);
-            });
+            })
+            ->latest();
     }
 
     public function isJobApplicable(Authenticatable|User|int $user): bool

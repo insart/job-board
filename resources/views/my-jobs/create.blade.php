@@ -37,6 +37,3 @@
         </form>
     </x-card>
 </x-layout>
-
-* @property string $level
-* @property string $status

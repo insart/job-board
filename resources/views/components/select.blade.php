@@ -6,11 +6,16 @@
                     'ring-slate-300' => !$errors->has($name),
                     'ring-red-300' => $errors->has($name),
                 ]) }}>
-        <option value="" selected class="text-gray-500">{{ $placeholder }}</option>
+        <option value="" class="text-gray-500">{{ $placeholder }}</option>
         @foreach($options as $option)
-            <option value="{{ $option }}" @selected(old('option') == $option)>
+            <option value="{{ $option }}" @selected(old($name, $selected) == $option)>
                 {{ Str::ucfirst($option) }}
             </option>
         @endforeach
     </select>
+    @error($name)
+    <div class="mt-1 text-xs text-red-500">
+        {{ $message }}
+    </div>
+    @enderror
 </div>

@@ -14,7 +14,11 @@ class MyJobController extends Controller
      */
     public function index()
     {
-        return view('my-jobs.index');
+        return view('my-jobs.index', [
+            'jobVacancies' => auth()->user()->employer->jobVacancies()
+                ->with(['employer', 'jobApplications', 'jobApplications.user'])
+                ->latest()->get(),
+        ]);
     }
 
     /**
@@ -33,7 +37,7 @@ class MyJobController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'salary' => 'required|numeric',
+            'salary' => 'required|numeric|min:1000|max:1000000',
             'location' => 'required|string',
             'level' => [
                 'required',
@@ -51,7 +55,7 @@ class MyJobController extends Controller
             ->create($validated);
 
         return redirect()
-            ->route('my-jobs.create')
+            ->route('my-jobs.index')
             ->with('success', 'Job vacancy created successfully.');
     }
 
@@ -66,9 +70,9 @@ class MyJobController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(JobVacancy $myJob)
     {
-        //
+        return view('my-jobs.edit', ['jobVacancy' => $myJob]);
     }
 
     /**
