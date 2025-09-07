@@ -5,7 +5,7 @@
         'Edit' => '#'
     ]" class="mb-2"/>
     <x-card class="mb-8">
-        <form action="{{ route('my-jobs.store') }}" method="POST">
+        <form action="{{ route('my-jobs.update', $jobVacancy) }}" method="POST">
             @csrf
             @method('PUT')
             <div class="mb-4 grid grid-cols-2 gap-4">
