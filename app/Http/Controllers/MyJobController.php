@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobVacancyRequest;
 use App\Models\JobVacancy;
 use Auth;
 use Illuminate\Http\Request;
@@ -32,22 +33,9 @@ class MyJobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JobVacancyRequest $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'salary' => 'required|numeric|min:1000|max:1000000',
-            'location' => 'required|string',
-            'level' => [
-                'required',
-                Rule::in(JobVacancy::$levels),
-            ],
-            'category' => [
-                'required',
-                Rule::in(JobVacancy::$categories),
-            ],
-        ]);
+        $validated = $request->validated();
 
         Auth::user()
             ->employer
@@ -78,9 +66,14 @@ class MyJobController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JobVacancyRequest $request, JobVacancy $myJob)
     {
-        //
+        $validated = $request->validated();
+        $myJob->update($validated);
+
+        return redirect()
+            ->route('my-jobs.index')
+            ->with('success', 'Job vacancy updated successfully.');
     }
 
     /**
