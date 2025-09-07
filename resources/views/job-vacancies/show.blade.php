@@ -11,9 +11,17 @@
             <x-link-button :href="route('job-vacancies.application.create', $jobVacancy)" class="mt-4">
                 Apply
             </x-link-button>
+        @elseif($jobVacancy->status == 'closed')
+            <div class="mt-4 text-center font-medium text-sm text-blue-500">
+                Period for application has expired.
+            </div>
+        @elseif(Auth::user() === null)
+            <div class="mt-4 text-center font-medium text-sm text-blue-500">
+                You need to be logged in to apply to this job.
+            </div>
         @else
             <div class="mt-4 text-center font-medium text-sm text-blue-500">
-                You have already applied to this job or period for application has expired.
+                You have already applied to this job!
             </div>
         @endcan
     </x-job-card>

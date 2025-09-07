@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Models\JobVacancy;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class JobVacancyPolicy
 {
@@ -13,6 +14,11 @@ class JobVacancyPolicy
     public function viewAny(?User $user): bool
     {
         return true;
+    }
+
+    public function viewAnyByEmployer(User $user): bool
+    {
+        return $user->employer !== null;
     }
 
     /**
@@ -28,15 +34,19 @@ class JobVacancyPolicy
      */
     public function create(User $user): bool
     {
-        return false;
+        return $user->employer !== null;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, JobVacancy $jobVacancy): bool
+    public function update(User $user, JobVacancy $jobVacancy): bool|Response
     {
-        return false;
+        if ($user->employer !== null && $jobVacancy->employer_id === $user->employer->id) {
+            return true;
+        } else {
+            return Response::deny('What the hack are you doing here?');
+        }
     }
 
     /**
@@ -44,7 +54,7 @@ class JobVacancyPolicy
      */
     public function delete(User $user, JobVacancy $jobVacancy): bool
     {
-        return false;
+        return $user->id === $jobVacancy->employer->user_id;
     }
 
     /**

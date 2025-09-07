@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\JobVacancy;
-use Illuminate\Http\Request;
+use Gate;
 
 class JobVacancyController extends Controller
 {
@@ -12,6 +12,8 @@ class JobVacancyController extends Controller
      */
     public function index()
     {
+        Gate::authorize('view-any', JobVacancy::class);
+
         return view('job-vacancies.index', [
             'jobVacancies' => JobVacancy::search()
                 ->with('employer')
@@ -20,54 +22,16 @@ class JobVacancyController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(JobVacancy $jobVacancy)
     {
+        Gate::authorize('view', $jobVacancy);
+
         return view(
             'job-vacancies.show', [
                 'jobVacancy' => $jobVacancy->load('employer.jobVacancies'),
             ]
         );
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

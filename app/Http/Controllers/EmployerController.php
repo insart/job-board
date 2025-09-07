@@ -10,14 +10,6 @@ use Illuminate\Http\Request;
 class EmployerController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create()
@@ -32,16 +24,14 @@ class EmployerController extends Controller
      */
     public function store(Request $request)
     {
-        Auth::user()->employer()->create([
-            ...$request->validate([
-                'name' => 'required|string|max:255|min:3',
-                'email' => 'required|email|unique:employers',
-                'address' => 'required|string|max:255',
-                'phone' => 'required|unique:employers',
-                'website' => 'string|nullable',
-                'description' => 'string|nullable',
-            ]),
-        ]);
+        Auth::user()->employer()->create($request->validate([
+            'name' => 'required|string|max:255|min:3',
+            'email' => 'required|email|unique:employers',
+            'address' => 'required|string|max:255',
+            'phone' => 'required|unique:employers',
+            'website' => 'string|nullable',
+            'description' => 'string|nullable',
+        ]));
 
         return redirect()->route('job-vacancies.index')->with('success', 'Employer created successfully.');
     }

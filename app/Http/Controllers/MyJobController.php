@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\JobVacancyRequest;
 use App\Models\JobVacancy;
 use Auth;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Gate;
 
 class MyJobController extends Controller
 {
@@ -15,10 +14,13 @@ class MyJobController extends Controller
      */
     public function index()
     {
+        Gate::authorize('view-any-by-employer', JobVacancy::class);
+
         return view('my-jobs.index', [
             'jobVacancies' => auth()->user()->employer->jobVacancies()
                 ->with(['employer', 'jobApplications', 'jobApplications.user'])
-                ->latest()->get(),
+                ->latest()
+                ->get(),
         ]);
     }
 
@@ -27,6 +29,8 @@ class MyJobController extends Controller
      */
     public function create()
     {
+        Gate::authorize('create', JobVacancy::class);
+
         return view('my-jobs.create');
     }
 
@@ -35,6 +39,7 @@ class MyJobController extends Controller
      */
     public function store(JobVacancyRequest $request)
     {
+        Gate::authorize('create', JobVacancy::class);
         $validated = $request->validated();
 
         Auth::user()
@@ -60,6 +65,8 @@ class MyJobController extends Controller
      */
     public function edit(JobVacancy $myJob)
     {
+        Gate::authorize('update', $myJob);
+
         return view('my-jobs.edit', ['jobVacancy' => $myJob]);
     }
 
@@ -68,6 +75,7 @@ class MyJobController extends Controller
      */
     public function update(JobVacancyRequest $request, JobVacancy $myJob)
     {
+        Gate::authorize('update', $myJob);
         $validated = $request->validated();
         $myJob->update($validated);
 
@@ -79,8 +87,10 @@ class MyJobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(JobVacancy $myJob)
     {
-        //
+        $myJob->delete();
+
+        return redirect('my-jobs.index')->with('success', 'Job vacancy deleted successfully.');
     }
 }
