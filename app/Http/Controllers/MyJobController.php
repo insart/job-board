@@ -91,6 +91,8 @@ class MyJobController extends Controller
     {
         $myJob->delete();
 
-        return redirect('my-jobs.index')->with('success', 'Job vacancy deleted successfully.');
+        return redirect()
+            ->route('my-jobs.index')
+            ->with('success', 'Job vacancy deleted successfully.');
     }
 }

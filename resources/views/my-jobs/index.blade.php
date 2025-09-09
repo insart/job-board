@@ -40,18 +40,25 @@
                     <x-link-button href="{{ route('my-jobs.edit', $jobVacancy) }}">
                         Edit
                     </x-link-button>
+                    <form action="{{ route('my-jobs.destroy', $jobVacancy) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <x-button class="text-red-700">Delete</x-button>
+                    </form>
                 </div>
             </div>
         </x-job-card>
     @empty
-        <div>
-            <div>
+        <div class="rounded-md border border-dotted border-gray-500 p-8">
+            <div class="text-center font-bold text-gray-500">
                 No jobs posted yet.
             </div>
-            <div class="mt-4">
+            <div class="text-center">
                 Create a new job to get started by clicking the button below.
             </div>
-            <x-link-button href="{{ route('my-jobs.create') }}">Add New</x-link-button>
+            <div class="text-center mt-4">
+                <x-link-button href="{{ route('my-jobs.create') }}">Add New</x-link-button>
+            </div>
         </div>
     @endforelse
 </x-layout>

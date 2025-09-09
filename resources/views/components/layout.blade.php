@@ -27,11 +27,13 @@
                     {{ auth()->user()->name ?? 'UserName' }}: Applications
                 </a>
             </li>
+            <li>|</li>
             <li>
                 <a href="{{ route('my-jobs.index') }}">
                     My Jobs
                 </a>
             </li>
+            <li>|</li>
             <li>
                 <form action="{{ route('auth.destroy') }}" method="POST" class="">
                     @csrf
